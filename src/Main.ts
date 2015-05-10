@@ -100,108 +100,25 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene(): void {
+        var board:egret.Shape = new egret.Shape;
+        board.graphics.lineStyle( 2, 0x00cc00 );
+        board.graphics.beginFill( 0x000000 );
+        board.graphics.drawRect( 10, 10, 400, 400 );
+        board.graphics.endFill();
 
-        var sky: egret.Bitmap = this.createBitmapByName("bgImage");
-        this.addChild(sky);
-        var stageW: number = this.stage.stageWidth;
-        var stageH: number = this.stage.stageHeight;
-        sky.width = stageW;
-        sky.height = stageH;
+        board.graphics.lineStyle( 5, 0x00cc00 );
 
-        var topMask: egret.Shape = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
-        topMask.graphics.drawRect(0, 0, stageW, stageH);
-        topMask.graphics.endFill();
-        topMask.width = stageW;
-        topMask.height = stageH;
-        this.addChild(topMask);
-
-        var icon: egret.Bitmap = this.createBitmapByName("egretIcon");
-        icon.anchorX = icon.anchorY = 0.5;
-        this.addChild(icon);
-        icon.x = stageW / 2;
-        icon.y = stageH / 2 - 60;
-        icon.scaleX = 0.55;
-        icon.scaleY = 0.55;
-
-        var colorLabel: egret.TextField = new egret.TextField();
-        colorLabel.x = stageW / 2;
-        colorLabel.y = stageH / 2 + 50;
-        colorLabel.anchorX = colorLabel.anchorY = 0.5;
-        colorLabel.textColor = 0xffffff;
-        colorLabel.textAlign = "center";
-        colorLabel.text = "Hello Egret";
-        colorLabel.size = 20;
-        this.addChild(colorLabel);
-
-        var textContainer: egret.Sprite = new egret.Sprite();
-        textContainer.anchorX = textContainer.anchorY = 0.5;
-        this.addChild(textContainer);
-        textContainer.x = stageW / 2;
-        textContainer.y = stageH / 2 + 100;
-        textContainer.alpha = 0;
-
-        this.textContainer = textContainer;
-
-        //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
-        // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description", this.startAnimation, this)
-    }
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
-     */
-    private createBitmapByName(name: string): egret.Bitmap {
-        var result: egret.Bitmap = new egret.Bitmap();
-        var texture: egret.Texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
-    }
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    private startAnimation(result: Array<any>): void {
-        var textContainer: egret.Sprite = this.textContainer;
-        var count: number = -1;
-        var self: any = this;
-        var change: Function = function () {
-            count++;
-            if (count >= result.length) {
-                count = 0;
-            }
-            var lineArr = result[count];
-
-            self.changeDescription(textContainer, lineArr);
-
-            var tw = egret.Tween.get(textContainer);
-            tw.to({ "alpha": 1 }, 200);
-            tw.wait(2000);
-            tw.to({ "alpha": 0 }, 200);
-            tw.call(change, this);
+        for ( var i = 1; i <= 2; i++ ) {
+            board.graphics.moveTo( 10 + 20, 10 + 20 + 120 * i );
+            board.graphics.lineTo( 10 + 20 + 120 * 3, 10 + 20 + 120 * i );
         }
 
-        change();
-    }
-    /**
-     * 切换描述内容
-     * Switch to described content
-     */
-    private changeDescription(textContainer: egret.Sprite, lineArr: Array<any>): void {
-        textContainer.removeChildren();
-        var w: number = 0;
-        for (var i: number = 0; i < lineArr.length; i++) {
-            var info: any = lineArr[i];
-            var colorLabel: egret.TextField = new egret.TextField();
-            colorLabel.x = w;
-            colorLabel.anchorX = colorLabel.anchorY = 0;
-            colorLabel.textColor = parseInt(info["textColor"]);
-            colorLabel.text = info["text"];
-            colorLabel.size = 30;
-            textContainer.addChild(colorLabel);
-
-            w += colorLabel.width;
+        for ( var i = 1; i <= 2; i++ ) {
+            board.graphics.moveTo( 10 + 20 + 120 * i, 10 + 20 );
+            board.graphics.lineTo( 10 + 20 + 120 * i, 10 + 20 + 120 * 3 );
         }
+
+        this.addChild( board );
     }
 }
 
